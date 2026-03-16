@@ -744,7 +744,13 @@ async function search() {
                 `data-api-url="${item.api_url.replace(/"/g, '&quot;')}"` : '';
 
             // 修改为水平卡片布局，图片在左侧，文本在右侧，并优化样式
-            const hasCover = item.vod_pic && item.vod_pic.startsWith('http');
+            const coverUrl = window.LibreTVUtils?.buildCoverUrl
+                ? window.LibreTVUtils.buildCoverUrl(item)
+                : '';
+            const fallbackCoverUrl = window.LibreTVUtils?.fallbackCoverUrl || '';
+            const safeCoverUrl = coverUrl.replace(/"/g, '&quot;');
+            const safeFallbackCoverUrl = fallbackCoverUrl.replace(/"/g, '&quot;');
+            const hasCover = Boolean(coverUrl);
 
             return `
                 <div class="card-hover bg-[#111] rounded-lg overflow-hidden cursor-pointer transition-all hover:scale-[1.02] h-full shadow-sm hover:shadow-md" 
@@ -752,9 +758,10 @@ async function search() {
                     <div class="flex h-full">
                         ${hasCover ? `
                         <div class="relative flex-shrink-0 search-card-img-container">
-                            <img src="${item.vod_pic}" alt="${safeName}" 
+                            <img src="${safeCoverUrl}" alt="${safeName}" 
                                  class="h-full w-full object-cover transition-transform hover:scale-110" 
-                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450?text=无封面'; this.classList.add('object-contain');" 
+                                 onerror="this.onerror=null; this.src='${safeFallbackCoverUrl}'; this.classList.add('object-contain');" 
+                                 referrerpolicy="no-referrer"
                                  loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
                         </div>` : ''}
