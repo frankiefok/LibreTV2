@@ -7,6 +7,7 @@
   "author": "bestZwei",
   "license": "Apache-2.0",
   "scripts": {
+    "build:shared-config": "node scripts/generate-shared-config.mjs",
     "dev": "nodemon server.mjs",
     "start": "node server.mjs"
   },
